@@ -21,24 +21,25 @@ function App() {
 
   useEffect(() => {
     window.fbAsyncInit = function () {
-      FB?.init({
-        appId: '709846977358878',
+      FB.init({
+        appId: '422187410098220',
         cookie: true,
         xfbml: true,
-        version: 'v16.0',
+        version: 'v15.0',
       });
+      FB.AppEvents.logPageView();
 
-      // FB.AppEvents.logPageView();
-
+      // get our login status for render buttons and actions
       FB.getLoginStatus(function (response) {
+        if (response.status === 'connected') {
+          console.log('tas logeado', response);
+        }
         console.log(response);
-        // if (response.status === 'connected') setLoged(true);
-        // else setLoged(false);
       });
     };
 
     (function (d, s: any, id) {
-      var js,
+      let js,
         fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {
         return;
