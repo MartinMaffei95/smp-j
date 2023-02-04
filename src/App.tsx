@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     window.fbAsyncInit = function () {
       FB.init({
-        appId: '422187410098220',
+        appId: '709846977358878',
         cookie: true,
         xfbml: true,
         version: 'v15.0',
