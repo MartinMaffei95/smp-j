@@ -69,6 +69,31 @@ function App() {
       .catch((err) => console.error(err));
   };
 
+  const sendWhatsappTemplate = (templateName?: string) => {
+    if (!message) {
+      return alert('Algotamal');
+    }
+    fetch(`https://graph.facebook.com/v16.0/${NUMBER_ID}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${message.token}`,
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: message.to_number,
+        type: 'template',
+        template: {
+          name: 'hello_world',
+          language: { code: 'en_US' },
+        },
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log('Fetch Response', data))
+      .catch((err) => console.error(err));
+  };
+
   const fbLogin = () => {
     FB.login(
       function (response) {
@@ -179,6 +204,21 @@ function App() {
             {' '}
             Conversación
           </h3>
+        </div>
+        <div className="m-2">
+          <div className="flex justify-between border-b">
+            <p className="p-2 font-bold text-l">Mensaje rápido 1</p>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                sendWhatsappTemplate();
+              }}
+              className="border p-2 bg-emerald-800 text-white font-bold text-l hover:bg-emerald-600"
+            >
+              {' '}
+              Enviar{' '}
+            </button>
+          </div>
         </div>
         <div className="flex flex-col gap-2 mb-4 bg-slate-600  p-2">
           <h3 className="font-bold text-white">Ultimo Mensaje :</h3>
