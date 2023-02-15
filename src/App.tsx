@@ -21,6 +21,14 @@ function App() {
     message: '',
   });
 
+  //template
+
+  const [templateName, setTemplateName] = useState<string | null>(null);
+  const handleTemplate = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { value, name } = e.target;
+    setTemplateName(value);
+  };
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
@@ -84,7 +92,7 @@ function App() {
         to: message.to_number,
         type: 'template',
         template: {
-          name: 'hello_world',
+          name: `${templateName}`,
           language: { code: 'en_US' },
         },
       }),
@@ -211,7 +219,27 @@ function App() {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                sendWhatsappTemplate();
+                sendWhatsappTemplate('hello_world');
+              }}
+              className="border p-2 bg-emerald-800 text-white font-bold text-l hover:bg-emerald-600"
+            >
+              {' '}
+              Enviar{' '}
+            </button>
+          </div>
+          <div className="flex justify-between border-b">
+            <input
+              className="p-2 font-bold text-l bg-slate-400"
+              name="templateName"
+              value={templateName || ''}
+              onChange={(e) => {
+                handleTemplate(e);
+              }}
+            />
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                sendWhatsappTemplate(templateName as string);
               }}
               className="border p-2 bg-emerald-800 text-white font-bold text-l hover:bg-emerald-600"
             >
