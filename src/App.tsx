@@ -23,10 +23,16 @@ function App() {
 
   //template
 
-  const [templateName, setTemplateName] = useState<string | null>(null);
+  const [template, setTemplate] = useState<any>({
+    name: '',
+    lenguage: '',
+  });
   const handleTemplate = (e: ChangeEvent<HTMLInputElement>): void => {
     const { value, name } = e.target;
-    setTemplateName(value);
+    setTemplate({
+      ...template,
+      [name]: value,
+    });
   };
 
   const handleChange = (
@@ -77,7 +83,7 @@ function App() {
       .catch((err) => console.error(err));
   };
 
-  const sendWhatsappTemplate = (templateName?: string) => {
+  const sendWhatsappTemplate = (templateName?: string, lenguage?: string) => {
     if (!message) {
       return alert('Algotamal');
     }
@@ -93,7 +99,7 @@ function App() {
         type: 'template',
         template: {
           name: `${templateName}`,
-          language: { code: 'en_US' },
+          language: { code: `${lenguage}` },
         },
       }),
     })
@@ -219,7 +225,7 @@ function App() {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                sendWhatsappTemplate('hello_world');
+                sendWhatsappTemplate('hello_world', 'en_US');
               }}
               className="border p-2 bg-emerald-800 text-white font-bold text-l hover:bg-emerald-600"
             >
@@ -230,8 +236,18 @@ function App() {
           <div className="flex justify-between border-b">
             <input
               className="p-2 font-bold text-l bg-slate-400"
-              name="templateName"
-              value={templateName || ''}
+              name="name"
+              placeholder="template name"
+              value={template?.name || ''}
+              onChange={(e) => {
+                handleTemplate(e);
+              }}
+            />
+            <input
+              className="p-2 font-bold text-l bg-slate-400"
+              name="lenguage"
+              placeholder="lenguage"
+              value={template?.lenguage || ''}
               onChange={(e) => {
                 handleTemplate(e);
               }}
@@ -239,7 +255,7 @@ function App() {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                sendWhatsappTemplate(templateName as string);
+                sendWhatsappTemplate(template.name, template.lenguage);
               }}
               className="border p-2 bg-emerald-800 text-white font-bold text-l hover:bg-emerald-600"
             >
