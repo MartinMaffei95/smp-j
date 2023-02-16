@@ -122,8 +122,13 @@ function App() {
         }
       },
       {
-        scope:
-          'pages_show_list,instagram_basic,pages_read_user_content,public_profile,business_management,whatsapp_business_management',
+        scope: `pages_show_list,
+          instagram_basic,
+          pages_read_user_content,
+          public_profile,
+          business_management,
+          whatsapp_business_management,
+          picture`,
       }
     );
   };
@@ -153,7 +158,11 @@ function App() {
         if (response.status === 'connected') {
           console.log('tas logeado', response);
           setLoged(true);
-          setToken(response.authResponse.accessToken);
+          setToken(response?.authResponse?.accessToken);
+          setMessage((oldSt) => ({
+            ...oldSt,
+            token: response?.authResponse?.accessToken,
+          }));
         } else {
           setLoged(false);
         }
