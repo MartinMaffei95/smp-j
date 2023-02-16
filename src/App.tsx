@@ -114,19 +114,10 @@ function App() {
         console.log(response);
         if (response.authResponse) {
           console.log('Welcome!  Fetching your information.... ');
-          FB.api(
-            '/me',
-            'get',
-            { fields: 'id,name,email,albums,likes,feed,picture' },
-            function (response) {
-              setUserData((oldSt: any) => ({
-                ...oldSt,
-                response,
-              }));
-            }
-          );
+          setLoged(true);
         } else {
           console.log('User cancelled login or did not fully authorize.');
+          setLoged(false);
         }
       },
       {
@@ -161,14 +152,7 @@ function App() {
       FB.getLoginStatus(function (response) {
         if (response.status === 'connected') {
           console.log('tas logeado', response);
-          FB.api(
-            '/me',
-            'get',
-            { fields: 'id,name,email,albums,likes,feed,picture' },
-            function (response) {
-              setUserData((oldSt: any) => ({ ...oldSt, response }));
-            }
-          );
+
           setLoged(true);
           setToken(response?.authResponse?.accessToken);
           setMessage((oldSt) => ({
@@ -219,6 +203,19 @@ function App() {
       socket.off('disconnect');
     };
   }, []);
+
+  useEffect(() => {
+    return () =>
+      FB.api(
+        '/me',
+        'get',
+        { fields: 'id,name,email,albums,likes,feed,picture' },
+        function (response) {
+          console.log(response);
+          setUserData((oldSt: any) => ({ ...oldSt, response }));
+        }
+      );
+  }, [loged]);
   return (
     <div className="App p-4">
       <div>
