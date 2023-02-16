@@ -13,10 +13,9 @@ export type MessageToSend = {
 function App() {
   const [loged, setLoged] = useState<boolean>(false);
   const [lastMsg, setLastMsg] = useState<WhatsappMessage | null>(null);
-
+  const [token, setToken] = useState<string>('');
   const [message, setMessage] = useState<MessageToSend>({
-    token:
-      'EAAKFmiDuLB4BAGtSuJJcV7MyOyZCld1p5hfVlCSNTys05ANSxzkH0h3I5WTqMt9ZBX7c5umQG9tWiwd0w480eZCm9rV8fnM82Bl6tLNdbSLUiSkWEraAsnJUdZAL4DbF2jRZBKOZBGY0RFJNo8mJjJC8ZAYM3Irw5jlvcr8CEBwJDKaNB8HqpesSZCWltwKSrJg2YWaZCsMwL08ZCKTVyvJG3l',
+    token: token,
     to_number: '543417229528',
     message: '',
   });
@@ -153,6 +152,10 @@ function App() {
       FB.getLoginStatus(function (response) {
         if (response.status === 'connected') {
           console.log('tas logeado', response);
+          setLoged(true);
+          setToken(response.authResponse.accessToken);
+        } else {
+          setLoged(false);
         }
         console.log(response);
       });
@@ -170,7 +173,7 @@ function App() {
       fjs?.parentNode?.insertBefore(js, fjs);
     })(document, 'script', 'facebook-jssdk');
   }, []);
-
+  //socket connection
   useEffect(() => {
     socket.on('connect', () => {
       console.log('connectado');
