@@ -14,6 +14,7 @@ function App() {
   const [loged, setLoged] = useState<boolean>(false);
   const [lastMsg, setLastMsg] = useState<WhatsappMessage | null>(null);
   const [token, setToken] = useState<string>('');
+  const [userData, setUserData] = useState<any>({});
   const [message, setMessage] = useState<MessageToSend>({
     token: token,
     to_number: '543417229528',
@@ -113,17 +114,24 @@ function App() {
         console.log(response);
         if (response.authResponse) {
           console.log('Welcome!  Fetching your information.... ');
-          FB.api('/me', function (response) {
-            // console.log('Good to see you, ' + response + '.');
-            console.log('res of FBAPI:', response);
-          });
+          FB.api(
+            '/me',
+            'get',
+            { fields: 'id,name,email,albums,likes,feed,picture' },
+            function (response) {
+              setUserData((oldSt: any) => ({
+                ...oldSt,
+                response,
+              }));
+            }
+          );
         } else {
           console.log('User cancelled login or did not fully authorize.');
         }
       },
       {
         scope:
-          'pages_show_list,instagram_basic,pages_read_user_content,public_profile,business_management,whatsapp_business_management,picture',
+          'pages_show_list,instagram_basic,pages_read_user_content,public_profile,business_management,whatsapp_business_management',
       }
     );
   };
@@ -132,6 +140,7 @@ function App() {
       console.log(res);
     });
     setLoged(false);
+    setUserData(null);
   };
 
   const socketCall = () => {
@@ -152,6 +161,14 @@ function App() {
       FB.getLoginStatus(function (response) {
         if (response.status === 'connected') {
           console.log('tas logeado', response);
+          FB.api(
+            '/me',
+            'get',
+            { fields: 'id,name,email,albums,likes,feed,picture' },
+            function (response) {
+              setUserData((oldSt: any) => ({ ...oldSt, response }));
+            }
+          );
           setLoged(true);
           setToken(response?.authResponse?.accessToken);
           setMessage((oldSt) => ({
@@ -206,7 +223,27 @@ function App() {
     <div className="App p-4">
       <div>
         {loged ? (
-          <button onClick={logOut}>Cerrar Sesion</button>
+          <div>
+            {userData && (
+              <div>
+                <img
+                  height={userData?.picture?.data?.height || 50}
+                  width={userData?.picture?.data?.width || 50}
+                  alt="profile image"
+                  src={
+                    userData?.picture?.data?.url ||
+                    'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'
+                  }
+                />
+              </div>
+            )}
+            <button
+              className="bg-red-500 p-2 text-white font-bold"
+              onClick={logOut}
+            >
+              Cerrar Sesion
+            </button>
+          </div>
         ) : (
           <button
             className="bg-blue-400 p-2 text-white font-bold"
@@ -216,9 +253,7 @@ function App() {
           </button>
         )}
       </div>
-      <div>
-        <button onClick={socketCall}>FETCHIC</button>
-      </div>
+      <div></div>
       <div>
         <div>
           <h3 className="font-bold text-slate-900 text-4xl gap-2 text-center mb-4">
