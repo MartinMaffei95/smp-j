@@ -122,7 +122,7 @@ function App() {
       },
       {
         scope:
-          'pages_show_list,instagram_basic,pages_read_user_content,public_profile,business_management,whatsapp_business_management',
+          'pages_show_list,instagram_basic,pages_read_user_content,public_profile,business_management,whatsapp_business_management,pages_messaging',
       }
     );
   };
