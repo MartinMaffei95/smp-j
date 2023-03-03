@@ -9,6 +9,7 @@ export type MessageToSend = {
   token: string | undefined;
   to_number: string | undefined;
   message: string | undefined;
+  id_phone: string | undefined;
 };
 function App() {
   const [loged, setLoged] = useState<boolean>(false);
@@ -19,6 +20,7 @@ function App() {
     token: token,
     to_number: '543417229528',
     message: '',
+    id_phone: '',
   });
 
   //template
@@ -44,7 +46,7 @@ function App() {
       [name]: value,
     });
   };
-  const NUMBER_ID = '115068444828610';
+  const NUMBER_ID = '111156571915510';
 
   const sendWhatsappMessage = () => {
     if (!message) {
@@ -54,13 +56,14 @@ function App() {
       !message.to_number ||
       !message.token ||
       !message.message ||
+      !message.id_phone ||
       message.to_number.length <= 0 ||
       message.token.length <= 0 ||
       message.message.length <= 0
     ) {
       return alert('No puedes dejar campos vacios');
     }
-    fetch(`https://graph.facebook.com/v16.0/${NUMBER_ID}/messages`, {
+    fetch(`https://graph.facebook.com/v16.0/${message.id_phone}/messages`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,16 +143,16 @@ function App() {
 
   useEffect(() => {
     window.fbAsyncInit = function () {
-      FB.init({
+      FB?.init({
         appId: '709846977358878',
         cookie: true,
         xfbml: true,
         version: 'v15.0',
       });
-      FB.AppEvents.logPageView();
+      FB?.AppEvents?.logPageView();
 
       // get our login status for render buttons and actions
-      FB.getLoginStatus(function (response) {
+      FB?.getLoginStatus(function (response) {
         if (response.status === 'connected') {
           console.log('tas logeado', response);
 
@@ -162,7 +165,6 @@ function App() {
         } else {
           setLoged(false);
         }
-        console.log(response);
       });
     };
 
@@ -204,18 +206,18 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    return () =>
-      FB.api(
-        '/me',
-        'get',
-        { fields: 'id,name,email,albums,likes,feed,picture' },
-        function (response) {
-          console.log(response);
-          setUserData(response);
-        }
-      );
-  }, [loged]);
+  // useEffect(() => {
+  //   return () =>
+  //     FB.api(
+  //       '/me',
+  //       'get',
+  //       { fields: 'id,name,email,albums,likes,feed,picture' },
+  //       function (response) {
+  //         console.log(response);
+  //         setUserData(response);
+  //       }
+  //     );
+  // }, [loged]);
   return (
     <div className="App p-4">
       <div>
@@ -342,6 +344,17 @@ function App() {
           )}
         </div>
         <div className="flex flex-col gap-2 ">
+          <label htmlFor="token" className="w-full flex justify-between">
+            Identificador del número:
+            <input
+              className="bg-slate-500 border-none text-neutral-50"
+              name="token"
+              onChange={(e) => {
+                handleChange(e);
+              }}
+              value={message.id_phone}
+            />
+          </label>
           <label htmlFor="token" className="w-full flex justify-between">
             Token de acceso temporal:
             <input
