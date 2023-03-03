@@ -90,7 +90,7 @@ function App() {
     if (!message) {
       return alert('Algotamal');
     }
-    fetch(`https://graph.facebook.com/v16.0/${NUMBER_ID}/messages`, {
+    fetch(`https://graph.facebook.com/v16.0/${message.id_phone}/messages`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -348,7 +348,7 @@ function App() {
             Identificador del número:
             <input
               className="bg-slate-500 border-none text-neutral-50"
-              name="token"
+              name="id_phone"
               onChange={(e) => {
                 handleChange(e);
               }}
